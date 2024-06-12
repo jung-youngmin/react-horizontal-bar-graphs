@@ -2,17 +2,16 @@ import { toPng } from "html-to-image";
 import { useCallback, useState } from "react";
 import cssStyles from "./App.module.css";
 import TouchableTitle from "./components/TouchableTitle";
-import AndroidDemo from "./demo/AndroidDemo";
+import BarGraphDemo from "./demo/BarGraphDemo";
 import InstallDemo from "./demo/InstallDemo";
 import IosDemo from "./demo/IosDemo";
-import PackageDemo from "./demo/PackageDemo";
 
 function App() {
-	const [showInstallDemo, setShowInstallDemo] = useState(true);
-	const [showAndroidDemo, setShowAndroidDemo] = useState(false);
-	const [showAndroidTabDemo, setShowAndroidTabDemo] = useState(false);
+	const [showInstallDemo, setShowInstallDemo] = useState(false);
+	const [showBarGraphDemo, setShowBarGraphDemo] = useState(false);
+	// const [showAndroidTabDemo, setShowAndroidTabDemo] = useState(false);
 	const [showIphoneDemo, setShowIphoneDemo] = useState(false);
-	const [showIpadDemo, setShowIpadDemo] = useState(false);
+	// const [showIpadDemo, setShowIpadDemo] = useState(false);
 
 	const onPressPng = useCallback(async (ref: React.RefObject<HTMLDivElement>) => {
 		if (ref.current === null) {
@@ -37,7 +36,7 @@ function App() {
 				<h2 style={{ margin: 0 }}>Device Mockup</h2>
 			</header>
 
-			<PackageDemo />
+			{/* <PackageDemo /> */}
 
 			<TouchableTitle
 				title="Install & import"
@@ -48,17 +47,12 @@ function App() {
 
 			<TouchableTitle
 				title="📞 AndroidMockup"
-				isActive={showAndroidDemo}
-				onClick={() => setShowAndroidDemo(prev => !prev)}
+				isActive={showBarGraphDemo}
+				onClick={() => setShowBarGraphDemo(prev => !prev)}
 			/>
-			<AndroidDemo mode="phone" showDemo={showAndroidDemo} onPressPng={onPressPng} />
-
-			<TouchableTitle
-				title="📺 AndroidTabMockup"
-				isActive={showAndroidTabDemo}
-				onClick={() => setShowAndroidTabDemo(prev => !prev)}
-			/>
-			<AndroidDemo mode="tab" showDemo={showAndroidTabDemo} onPressPng={onPressPng} />
+			{showBarGraphDemo && (
+				<BarGraphDemo mode="phone" showDemo={showBarGraphDemo} onPressPng={onPressPng} />
+			)}
 
 			<TouchableTitle
 				title="📞 IPhoneMockup"
@@ -66,13 +60,6 @@ function App() {
 				onClick={() => setShowIphoneDemo(prev => !prev)}
 			/>
 			<IosDemo mode="phone" showDemo={showIphoneDemo} onPressPng={onPressPng} />
-
-			<TouchableTitle
-				title="📺 IPadMockup"
-				isActive={showIpadDemo}
-				onClick={() => setShowIpadDemo(prev => !prev)}
-			/>
-			<IosDemo mode="tab" showDemo={showIpadDemo} onPressPng={onPressPng} />
 		</div>
 	);
 }

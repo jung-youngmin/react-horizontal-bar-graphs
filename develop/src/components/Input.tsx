@@ -1,0 +1,77 @@
+import { CSSProperties, useCallback, useEffect, useState } from "react";
+import styles from "./styles.module.css";
+
+export interface IInputProps {
+	readonly label: string;
+	readonly inputType: "text" | "number";
+	readonly isRequired: boolean;
+	readonly defaultVal?: string;
+	readonly value?: string;
+	readonly min?: number;
+	readonly max?: number;
+	readonly placeholder?: string;
+	readonly onChange: (text: string) => void;
+	readonly onEnterKey?: () => void;
+	readonly style?: CSSProperties;
+	readonly className?: string;
+}
+
+export default function Input(props: IInputProps) {
+	const { label, inputType, isRequired, defaultVal, value, placeholder, onChange, onEnterKey } =
+		props;
+
+	const [text, setText] = useState(defaultVal);
+	useEffect(() => {
+		if (value !== undefined) {
+			setText(value);
+		}
+	}, [value]);
+
+	// const onSubmit = useCallback(() => {
+	// 	if (text === "") {
+	// 		return;
+	// 	} else {
+	// 		onClickSubmit(text);
+	// 	}
+	// }, [text, onClickSubmit]);
+
+	const onEnter = useCallback(
+		(e: React.KeyboardEvent<HTMLInputElement>) => {
+			if (e.key === "Enter") {
+				onEnterKey?.();
+			}
+		},
+		[onEnterKey],
+	);
+
+	return (
+		<div className={props.className} style={props.style}>
+			<span className={styles.subLabel}>{label}</span>
+			<input
+				type={inputType}
+				value={text}
+				placeholder={placeholder}
+				className={styles.myInput}
+				required={isRequired}
+				step={10}
+				min={props.min}
+				max={props.max}
+				style={{
+					boxSizing: "border-box",
+					width: 100,
+					padding: 8,
+					borderRadius: 12,
+					marginRight: 8,
+					borderWidth: 1,
+					borderStyle: "solid",
+					borderColor: "darkgray",
+				}}
+				onChange={e => {
+					setText(e.target.value);
+					onChange(e.target.value);
+				}}
+				onKeyDown={onEnter}
+			/>
+		</div>
+	);
+}

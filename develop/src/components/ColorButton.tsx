@@ -5,6 +5,7 @@ interface ICheckButtonProps {
 	readonly isActive: boolean;
 	readonly showIcon: boolean;
 	readonly onClick: () => void;
+	readonly type?: "submit" | "reset" | "button";
 	readonly style?: CSSProperties;
 	readonly className?: string;
 }
@@ -35,6 +36,7 @@ export default function ColorButton(props: ICheckButtonProps) {
 	return (
 		<button
 			className={props.className}
+			type={props.type}
 			style={{
 				display: "flex",
 				alignItems: "center",

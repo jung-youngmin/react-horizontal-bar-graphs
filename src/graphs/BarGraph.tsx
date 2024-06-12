@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
 		flexDirection: "column",
 		flex: 1,
 		position: "relative",
-		width: 360,
+		minWidth: 320,
 	},
 	title: {
 		fontWeight: "bold",

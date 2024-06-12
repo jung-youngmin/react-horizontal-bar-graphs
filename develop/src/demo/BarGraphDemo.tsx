@@ -5,6 +5,9 @@ import ColorButton from "../components/ColorButton";
 import InputButton from "../components/InputButton";
 // import { AndroidMockup, AndroidTabMockup } from "../dist";
 // import { AndroidMockup, AndroidTabMockup } from "react-device-mockup";
+import ColorPalette from "../components/ColorPalette";
+import Input from "../components/Input";
+import { BarGraph, IBarGraphData } from "../dist";
 import CodeBlock from "./CodeBlock";
 import demoStyle from "./demo.module.css";
 
@@ -13,11 +16,65 @@ interface IAndroidDemoProps {
 	readonly showDemo: boolean;
 	readonly onPressPng: (ref: React.RefObject<HTMLDivElement>) => void;
 }
-export default function AndroidDemo(props: IAndroidDemoProps) {
+export default function BarGraphDemo(props: IAndroidDemoProps) {
 	const DEFAULT_SCREEN_WIDTH = 200;
 	const DEFAULT_FRAME_COLOR = "#666666";
 	const DEFAULT_STATUS_BAR_COLOR = "#CCCCCC";
 
+	const BAR_DATA: IBarGraphData[] = useMemo(() => {
+		return [
+			{
+				value: 10,
+				label: "Label 0",
+				onPress: (label, value, color) => {
+					alert(label + value + "__" + color.toString());
+				},
+			},
+			{
+				value: 15,
+				label: "Label 1",
+			},
+			{
+				value: 15,
+				label: "Label 2",
+			},
+			{
+				value: 16,
+				label: "Label 3",
+			},
+			{
+				value: 24,
+				label: "Label 4",
+			},
+			{
+				value: 18,
+				label: "Label 5",
+			},
+			{
+				value: 12,
+				label: "Label 6",
+			},
+			{
+				value: 8,
+				label: "Label 7",
+			},
+			{
+				value: 45,
+				label: "Label 8",
+			},
+			{
+				value: 40,
+				label: "Label 9",
+			},
+		];
+	}, []);
+
+	const [graphData, setGraphData] = useState(BAR_DATA);
+	const [inputDataLabel, setInputDataLabel] = useState("");
+	const [inputDataValue, setInputDataValue] = useState(0);
+	const [inputDataColor, setInputDataColor] = useState<Property.Color>();
+
+	//////////////////////////////
 	const [screenWidth, setScreenWidth] = useState(DEFAULT_SCREEN_WIDTH);
 	const [noRoundedScreen, setNoRoundedScreen] = useState(false);
 	const [isLandscape, setIsLandscape] = useState(false);
@@ -127,48 +184,15 @@ export default function AndroidDemo(props: IAndroidDemoProps) {
 	return (
 		<div
 			className={demoStyle.flexRowWrap}
-			style={{ justifyContent: "center", display: props.showDemo ? "flex" : "none" }}>
+			style={{
+				justifyContent: "center",
+				display: props.showDemo ? "flex" : "none",
+			}}>
 			<div
 				className={demoStyle.flexBox}
 				style={{ display: "flex", alignItems: "flex-start" }}>
 				<div ref={ref}>
-					{/* {props.mode === "phone" && (
-						<AndroidMockup
-							screenWidth={screenWidth}
-							isLandscape={isLandscape}
-							noRoundedScreen={noRoundedScreen}
-							frameColor={frameColor}
-							frameOnly={frameOnly}
-							statusbarColor={statusbarColor}
-							hideStatusBar={hideStatusBar}
-							navBar={navBar}
-							navBarColor={navBarColor}
-							transparentNavBar={transparentNavBar}
-							hideNavBar={hideNavBar}
-							transparentCamArea={transparentCamArea}>
-							{showScreenDemo && (
-								<ScreenDemo screenWidth={screenWidth} isLandscape={isLandscape} />
-							)}
-						</AndroidMockup>
-					)}
-					{props.mode === "tab" && (
-						<AndroidTabMockup
-							screenWidth={screenWidth}
-							isLandscape={isLandscape}
-							noRoundedScreen={noRoundedScreen}
-							frameColor={frameColor}
-							frameOnly={frameOnly}
-							statusbarColor={statusbarColor}
-							hideStatusBar={hideStatusBar}
-							navBar={navBar}
-							navBarColor={navBarColor}
-							transparentNavBar={transparentNavBar}
-							hideNavBar={hideNavBar}>
-							{showScreenDemo && (
-								<ScreenDemo screenWidth={screenWidth} isLandscape={isLandscape} />
-							)}
-						</AndroidTabMockup>
-					)} */}
+					<BarGraph graphData={graphData} className={demoStyle.card} />
 				</div>
 			</div>
 			{/* control panel */}
@@ -200,6 +224,68 @@ export default function AndroidDemo(props: IAndroidDemoProps) {
 						}}
 						onClick={() => props.onPressPng(ref)}
 					/>
+				</div>
+				<h3 className={demoStyle.cardTitle}>Graph Data</h3>
+				<div className={`${demoStyle.card} ${demoStyle.flexColWrap} ${demoStyle.pt8}`}>
+					<form
+						style={{ display: "flex", flexDirection: "column" }}
+						onSubmit={event => {
+							event.preventDefault();
+							console.log(
+								"@@@ input",
+								inputDataLabel,
+								inputDataValue,
+								inputDataColor,
+							);
+						}}>
+						<div style={{ display: "flex" }}>
+							<Input
+								label="label"
+								value={inputDataLabel}
+								inputType="text"
+								isRequired
+								defaultVal=""
+								placeholder="label"
+								style={{ marginRight: 16 }}
+								onChange={text => setInputDataLabel(text)}
+							/>
+							<Input
+								label="value"
+								value={inputDataValue.toString()}
+								inputType="number"
+								min={0}
+								isRequired
+								defaultVal="0"
+								placeholder="value"
+								onChange={text => setInputDataValue(Number(text))}
+							/>
+						</div>
+						<ColorPalette
+							currentColor={inputDataColor}
+							style={{ marginTop: 8, marginBottom: 8 }}
+							onPressColor={color => {
+								setInputDataColor(color);
+							}}
+						/>
+						<ColorButton
+							label="submit"
+							type="submit"
+							isActive
+							showIcon={false}
+							onClick={() => {}}
+						/>
+						<ColorButton
+							label="reset"
+							type="reset"
+							isActive={false}
+							showIcon={false}
+							onClick={() => {
+								setInputDataLabel("");
+								setInputDataValue(0);
+								setInputDataColor(undefined);
+							}}
+						/>
+					</form>
 				</div>
 				<h3 className={demoStyle.cardTitle}>Common</h3>
 				<div className={`${demoStyle.card} ${demoStyle.flexColWrap} ${demoStyle.pt8}`}>
