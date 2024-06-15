@@ -36,6 +36,7 @@ const getStyles = (barHeight: number, barHolderColor: Property.Color, color: Pro
 			position: "absolute",
 			height: barHeight,
 			backgroundColor: color,
+			maxWidth: "100%",
 		},
 		valueCont: {
 			display: "flex",
@@ -132,8 +133,7 @@ export default function BarItem(props: IBarItemProps) {
 			if (barRef.current === null) {
 				return;
 			}
-			const bar = barRef.current.offsetWidth;
-			// setBarWidth(bar);
+			const bar = barRef.current.offsetWidth - props.barHeight;
 			setColorBarWidth(props.barHeight + (bar * valPercent) / 100);
 		});
 
@@ -267,16 +267,13 @@ export default function BarItem(props: IBarItemProps) {
 						/>
 					))}
 				<div
+					ref={barRef}
 					style={{
 						...styles.barHolder,
 						...(props.barLeftStyle === "rounded" && styles.roundedLeftBar),
 						...(props.barHolderRightStyle === "rounded" && styles.roundedRightBar),
 					}}>
-					<div
-						ref={barRef}
-						style={{
-							...styles.barHolder,
-						}}>
+					<div style={styles.barHolder}>
 						{props.showDivider && (
 							<GraphDivider
 								leftPosition={props.barHeight}
