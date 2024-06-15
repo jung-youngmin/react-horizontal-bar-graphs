@@ -69,10 +69,20 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 		];
 	}, []);
 
-	const [graphData, setGraphData] = useState(BAR_DATA);
+	const [graphData, setGraphData] = useState<IBarGraphData[]>([]);
 	const [inputDataLabel, setInputDataLabel] = useState("");
 	const [inputDataValue, setInputDataValue] = useState(0);
 	const [inputDataColor, setInputDataColor] = useState<Property.Color>();
+	const [totalCnt, setTotalCnt] = useState<number>();
+	const onClickTotalCnt = useCallback((inputVal: string) => {
+		if (inputVal === "") {
+			setTotalCnt(undefined);
+		} else {
+			setTotalCnt(Number(inputVal));
+		}
+	}, []);
+	const [title, setTitle] = useState("");
+	const [titlePosition, setTitlePosition] = useState<"top" | "bottom">("top");
 
 	//////////////////////////////
 	const [screenWidth, setScreenWidth] = useState(DEFAULT_SCREEN_WIDTH);
@@ -90,20 +100,28 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 
 	const [showScreenDemo, setShowScreenDemo] = useState<boolean>(false);
 
+	// TODO:
 	const resetAll = useCallback(() => {
-		setScreenWidth(DEFAULT_SCREEN_WIDTH);
-		setNoRoundedScreen(false);
-		setIsLandscape(false);
-		setHideStatusBar(false);
-		setFrameColor(DEFAULT_FRAME_COLOR);
-		setFrameOnly(false);
-		setStatusbarColor(DEFAULT_STATUS_BAR_COLOR);
-		setNavBar("swipe");
-		setNavBarColor(DEFAULT_STATUS_BAR_COLOR);
-		setTransparentNavBar(false);
-		setHideNavBar(false);
-		setTransparentCamArea(false);
-		setShowScreenDemo(false);
+		setGraphData([]);
+		setInputDataLabel("");
+		setInputDataValue(0);
+		setInputDataColor(undefined);
+		setTotalCnt(undefined);
+		setTitle("");
+
+		// setScreenWidth(DEFAULT_SCREEN_WIDTH);
+		// setNoRoundedScreen(false);
+		// setIsLandscape(false);
+		// setHideStatusBar(false);
+		// setFrameColor(DEFAULT_FRAME_COLOR);
+		// setFrameOnly(false);
+		// setStatusbarColor(DEFAULT_STATUS_BAR_COLOR);
+		// setNavBar("swipe");
+		// setNavBarColor(DEFAULT_STATUS_BAR_COLOR);
+		// setTransparentNavBar(false);
+		// setHideNavBar(false);
+		// setTransparentCamArea(false);
+		// setShowScreenDemo(false);
 	}, []);
 
 	const samplecode = useMemo(() => {
@@ -192,7 +210,15 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 				className={demoStyle.flexBox}
 				style={{ display: "flex", alignItems: "flex-start" }}>
 				<div ref={ref}>
-					<BarGraph graphData={graphData} className={demoStyle.card} />
+					<BarGraph
+						className={demoStyle.card}
+						style={{ borderRadius: 30, padding: 20, width: 400 }}
+						graphData={graphData.length > 0 ? graphData : BAR_DATA}
+						totalCnt={totalCnt}
+						title={title}
+						titleStyle={{ color: "#555555", marginTop: 8, marginBottom: 8 }}
+						titlePosition={titlePosition}
+					/>
 				</div>
 			</div>
 			{/* control panel */}
@@ -228,32 +254,46 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 				<h3 className={demoStyle.cardTitle}>Graph Data</h3>
 				<div className={`${demoStyle.card} ${demoStyle.flexColWrap} ${demoStyle.pt8}`}>
 					<form
-						style={{ display: "flex", flexDirection: "column" }}
+						style={{
+							display: "flex",
+							flexDirection: "column",
+						}}
 						onSubmit={event => {
 							event.preventDefault();
+
+							const newItem: IBarGraphData = {
+								label: inputDataLabel,
+								value: inputDataValue,
+								color: inputDataColor,
+							};
 							console.log(
 								"@@@ input",
 								inputDataLabel,
 								inputDataValue,
 								inputDataColor,
 							);
+
+							setGraphData(prev => [...prev, newItem]);
 						}}>
 						<div style={{ display: "flex" }}>
 							<Input
 								label="label"
 								value={inputDataLabel}
 								inputType="text"
+								inputWidth={120}
 								isRequired
 								defaultVal=""
 								placeholder="label"
 								style={{ marginRight: 16 }}
-								onChange={text => setInputDataLabel(text)}
+								onChange={setInputDataLabel}
 							/>
 							<Input
 								label="value"
 								value={inputDataValue.toString()}
 								inputType="number"
+								inputWidth={120}
 								min={0}
+								step={0.01}
 								isRequired
 								defaultVal="0"
 								placeholder="value"
@@ -263,28 +303,30 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 						<ColorPalette
 							currentColor={inputDataColor}
 							style={{ marginTop: 8, marginBottom: 8 }}
-							onPressColor={color => {
-								setInputDataColor(color);
-							}}
+							onPressColor={setInputDataColor}
 						/>
-						<ColorButton
-							label="submit"
-							type="submit"
-							isActive
-							showIcon={false}
-							onClick={() => {}}
-						/>
-						<ColorButton
-							label="reset"
-							type="reset"
-							isActive={false}
-							showIcon={false}
-							onClick={() => {
-								setInputDataLabel("");
-								setInputDataValue(0);
-								setInputDataColor(undefined);
-							}}
-						/>
+						<div style={{ display: "flex" }}>
+							<ColorButton
+								label="reset"
+								type="reset"
+								isActive={false}
+								showIcon={false}
+								style={{ justifyContent: "center", width: 100, marginRight: 4 }}
+								onClick={() => {
+									setInputDataLabel("");
+									setInputDataValue(0);
+									setInputDataColor(undefined);
+								}}
+							/>
+							<ColorButton
+								label="add"
+								type="submit"
+								isActive
+								showIcon={false}
+								style={{ justifyContent: "center", width: 100, marginLeft: 4 }}
+								onClick={() => {}}
+							/>
+						</div>
 					</form>
 				</div>
 				<h3 className={demoStyle.cardTitle}>Common</h3>
@@ -292,33 +334,33 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 					<div className={`${demoStyle.flexRowWrap} ${demoStyle.flexAlignEnd}`}>
 						<InputButton
 							className={demoStyle["mt8mr30"]}
-							label="✨ screenWidth"
+							label="totalCnt"
 							inputType="number"
-							defaultVal={DEFAULT_SCREEN_WIDTH.toString()}
-							value={screenWidth.toString()}
-							placeholder="screenWidth"
-							onClickSubmit={inputVal => {
-								setScreenWidth(Number(inputVal));
-							}}
+							placeholder="totalCnt"
+							value={totalCnt?.toString()}
+							onClickSubmit={onClickTotalCnt}
+						/>
+						<InputButton
+							className={demoStyle["mt8mr30"]}
+							label="title"
+							inputType="text"
+							placeholder="title"
+							value={title}
+							onClickSubmit={setTitle}
 						/>
 						<ButtonGroup
 							className={demoStyle["mt8mr30"]}
-							title="screenWidth Preset"
+							title="titlePosition"
 							buttonData={[
 								{
-									label: "200",
-									isActive: screenWidth === 200,
-									onClick: () => setScreenWidth(200),
+									label: "top",
+									isActive: titlePosition === "top",
+									onClick: () => setTitlePosition("top"),
 								},
 								{
-									label: "300",
-									isActive: screenWidth === 300,
-									onClick: () => setScreenWidth(300),
-								},
-								{
-									label: "400",
-									isActive: screenWidth === 400,
-									onClick: () => setScreenWidth(400),
+									label: "bottom",
+									isActive: titlePosition === "bottom",
+									onClick: () => setTitlePosition("bottom"),
 								},
 							]}
 						/>

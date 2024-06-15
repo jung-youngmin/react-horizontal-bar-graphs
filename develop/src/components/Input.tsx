@@ -5,10 +5,12 @@ export interface IInputProps {
 	readonly label: string;
 	readonly inputType: "text" | "number";
 	readonly isRequired: boolean;
+	readonly inputWidth?: number;
 	readonly defaultVal?: string;
 	readonly value?: string;
 	readonly min?: number;
 	readonly max?: number;
+	readonly step?: number;
 	readonly placeholder?: string;
 	readonly onChange: (text: string) => void;
 	readonly onEnterKey?: () => void;
@@ -17,8 +19,18 @@ export interface IInputProps {
 }
 
 export default function Input(props: IInputProps) {
-	const { label, inputType, isRequired, defaultVal, value, placeholder, onChange, onEnterKey } =
-		props;
+	const {
+		label,
+		inputType,
+		isRequired,
+		inputWidth = 100,
+		defaultVal,
+		value,
+		step = 10,
+		placeholder,
+		onChange,
+		onEnterKey,
+	} = props;
 
 	const [text, setText] = useState(defaultVal);
 	useEffect(() => {
@@ -53,12 +65,12 @@ export default function Input(props: IInputProps) {
 				placeholder={placeholder}
 				className={styles.myInput}
 				required={isRequired}
-				step={10}
+				step={step}
 				min={props.min}
 				max={props.max}
 				style={{
 					boxSizing: "border-box",
-					width: 100,
+					width: inputWidth,
 					padding: 8,
 					borderRadius: 12,
 					marginRight: 8,

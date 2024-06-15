@@ -5,7 +5,7 @@ import styles from "./styles.module.css";
 interface IInputButtonProps {
 	readonly label: string;
 	readonly inputType: HTMLInputTypeAttribute;
-	readonly defaultVal: string;
+	readonly defaultVal?: string;
 	readonly value?: string;
 	readonly placeholder: string;
 	readonly onClickSubmit: (inputVal: string) => void;
@@ -13,12 +13,14 @@ interface IInputButtonProps {
 	readonly className?: string;
 }
 export default function InputButton(props: IInputButtonProps) {
-	const { onClickSubmit } = props;
-	const [text, setText] = useState(props.defaultVal);
+	const { defaultVal, onClickSubmit } = props;
+	const [text, setText] = useState(defaultVal === undefined ? "" : defaultVal);
 
 	useEffect(() => {
 		if (props.value !== undefined) {
 			setText(props.value);
+		} else {
+			setText("");
 		}
 	}, [props.value]);
 
@@ -38,6 +40,12 @@ export default function InputButton(props: IInputButtonProps) {
 		},
 		[onSubmit],
 	);
+
+	const onReset = useCallback(() => {
+		const resetVal = defaultVal === undefined ? "" : defaultVal;
+		setText(resetVal);
+		onClickSubmit(resetVal);
+	}, [onClickSubmit, defaultVal]);
 
 	return (
 		<div className={props.className} style={props.style}>
@@ -68,10 +76,7 @@ export default function InputButton(props: IInputButtonProps) {
 					isActive={false}
 					showIcon={false}
 					style={{ marginRight: 4 }}
-					onClick={() => {
-						setText(props.defaultVal);
-						props.onClickSubmit(props.defaultVal);
-					}}
+					onClick={onReset}
 				/>
 				<ColorButton label={"submit"} isActive showIcon={false} onClick={onSubmit} />
 			</div>
