@@ -111,10 +111,12 @@ interface IBarItemProps {
 }
 
 export default function BarItem(props: IBarItemProps) {
-	const valPercent = useMemo(
-		() => Math.round((props.value / props.totalCnt) * 100),
-		[props.totalCnt, props.value],
-	);
+	const valPercent = useMemo(() => {
+		if (props.totalCnt === 0) {
+			return 0;
+		}
+		return Math.round((props.value / props.totalCnt) * 100);
+	}, [props.totalCnt, props.value]);
 
 	const [hover, setHover] = useState(false);
 	const [isTouched, setIsTouched] = useState<boolean>(false);

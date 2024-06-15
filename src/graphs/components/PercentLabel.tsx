@@ -14,10 +14,12 @@ export default function PercentLabel(props: IPercentLabelProps) {
 	const largeSize = useMemo(() => Math.round((props.barHeight / 2) * 1.3), [props.barHeight]);
 	const smallSize = useMemo(() => Math.round(props.barHeight / 2), [props.barHeight]);
 
-	const percentInteger = useMemo(
-		() => Math.round((props.value / props.totalCnt) * 100).toFixed(0),
-		[props.value, props.totalCnt],
-	);
+	const percentInteger = useMemo(() => {
+		if (props.totalCnt === 0) {
+			return 0;
+		}
+		return Math.round((props.value / props.totalCnt) * 100).toFixed(0);
+	}, [props.value, props.totalCnt]);
 
 	const percentDecimal = useMemo(() => {
 		if (props.percentFixed <= 0) {
