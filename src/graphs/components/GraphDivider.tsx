@@ -5,7 +5,7 @@ interface IGraphDividerProps {
 	readonly dividerInterver: 4 | 5 | 10 | 20 | 25 | 33.3 | 50;
 	readonly leftPosition: number;
 	/** default: "60%" */
-	readonly dividerHeight: string | number | undefined;
+	readonly dividerHeight: number;
 	/** default: "#BBBBBB" */
 	readonly dividerColor: Property.Color;
 	readonly dividerWidth: number;
@@ -42,7 +42,7 @@ export default function GraphDivider(props: IGraphDividerProps) {
 						borderRightStyle: "solid",
 						borderColor: props.dividerColor,
 						width: `${props.dividerInterver}%`,
-						height: props.dividerHeight,
+						height: `${props.dividerHeight}%`,
 						justifyContent: "center",
 						alignItems: "center",
 					}}

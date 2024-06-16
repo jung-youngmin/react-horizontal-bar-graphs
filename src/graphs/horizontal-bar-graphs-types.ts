@@ -101,11 +101,11 @@ export interface IHorizontalBarGraphsBaseProps {
 	 */
 	readonly dividerInterver?: 4 | 5 | 10 | 20 | 25 | 33.3 | 50;
 	/**
-	 * Height of divider
-	 * - NOTE: When set to `"100%"`, it is equal to the height of the bar
-	 * - default: `"60%"`
+	 * Height of divider (percent)
+	 * - NOTE: When set to `100`, it is equal to the height of the bar
+	 * - default: `60`
 	 */
-	readonly dividerHeight?: string | number | undefined;
+	readonly dividerHeight?: number;
 	/**
 	 * Color of divider
 	 * - default: `"#BBBBBB"`

@@ -96,7 +96,7 @@ export default function BarGraph(props: IBarGraphProps) {
 		barHolderRightStyle = "rounded",
 		showDivider = true,
 		dividerInterver = 20,
-		dividerHeight = "60%",
+		dividerHeight = 60,
 		dividerColor = "#BBBBBB",
 		dividerWidth = 1,
 		percentPosition = "right",

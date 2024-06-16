@@ -100,7 +100,7 @@ interface IBarItemProps {
 
 	readonly showDivider: boolean;
 	readonly dividerInterver: 4 | 5 | 10 | 20 | 25 | 33.3 | 50;
-	readonly dividerHeight: string | number;
+	readonly dividerHeight: number;
 	readonly dividerColor: Property.Color;
 	readonly dividerWidth: number;
 
