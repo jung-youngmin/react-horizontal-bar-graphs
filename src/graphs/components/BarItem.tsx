@@ -133,7 +133,8 @@ export default function BarItem(props: IBarItemProps) {
 			if (barRef.current === null) {
 				return;
 			}
-			const bar = barRef.current.offsetWidth - props.barHeight;
+			const { offsetWidth } = barRef.current;
+			const bar = offsetWidth > props.barHeight ? offsetWidth - props.barHeight : 0;
 			setColorBarWidth(props.barHeight + (bar * valPercent) / 100);
 		});
 
