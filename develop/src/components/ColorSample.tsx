@@ -1,11 +1,13 @@
 import { Property } from "csstype";
-import React, { useRef } from "react";
+import React, { CSSProperties, useRef } from "react";
 import useButtonInteraction from "../hooks/useButtonInteraction";
 
 interface IColorSampleProps {
 	readonly color: Property.Color;
-	readonly onClick: (color: Property.Color) => void;
+	readonly onClick?: (color: Property.Color) => void;
 	readonly isSelected?: boolean;
+	readonly style?: CSSProperties;
+	readonly className?: string;
 }
 
 function _ColorSample(props: IColorSampleProps) {
@@ -16,6 +18,7 @@ function _ColorSample(props: IColorSampleProps) {
 		<button
 			type="button"
 			ref={colorRef}
+			className={props.className}
 			style={{
 				width: 28,
 				height: 28,
@@ -34,8 +37,9 @@ function _ColorSample(props: IColorSampleProps) {
 				transitionDuration: "500ms",
 				transitionTimingFunction: "ease",
 				...(buttonInteraction.isInteraction && { opacity: 0.5 }),
+				...props.style,
 			}}
-			onClick={() => props.onClick(props.color)}
+			onClick={() => props.onClick?.(props.color)}
 			onMouseOver={buttonInteraction.onMouseOver}
 			onMouseLeave={buttonInteraction.onMouseLeave}
 			onTouchStart={buttonInteraction.onTouchStart}

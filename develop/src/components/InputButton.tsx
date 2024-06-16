@@ -13,14 +13,16 @@ interface IInputButtonProps {
 	readonly className?: string;
 }
 export default function InputButton(props: IInputButtonProps) {
-	const { defaultVal, onClickSubmit } = props;
-	const [text, setText] = useState(defaultVal === undefined ? "" : defaultVal);
+	const { defaultVal = "", onClickSubmit } = props;
+	const [text, setText] = useState(defaultVal);
+
+	// useEffect(() => {
+	// 	console.log("@@@ text", text);
+	// }, [text]);
 
 	useEffect(() => {
 		if (props.value !== undefined) {
 			setText(props.value);
-		} else {
-			setText("");
 		}
 	}, [props.value]);
 

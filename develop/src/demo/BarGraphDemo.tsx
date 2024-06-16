@@ -5,7 +5,9 @@ import ColorButton from "../components/ColorButton";
 import InputButton from "../components/InputButton";
 // import { AndroidMockup, AndroidTabMockup } from "../dist";
 // import { AndroidMockup, AndroidTabMockup } from "react-device-mockup";
+import moment from "moment";
 import ColorPalette from "../components/ColorPalette";
+import ColorSample from "../components/ColorSample";
 import Input from "../components/Input";
 import { BarGraph, IBarGraphData } from "../dist";
 import CodeBlock from "./CodeBlock";
@@ -20,6 +22,14 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 	const DEFAULT_SCREEN_WIDTH = 200;
 	const DEFAULT_FRAME_COLOR = "#666666";
 	const DEFAULT_STATUS_BAR_COLOR = "#CCCCCC";
+
+	const DEFAULT_TITLE_POSITION = "top";
+	const DEFAULT_BAR_HEIGHT = 28;
+	const DEFAULT_BAR_DISTANCE = 12;
+	const DEFAULT_HOLDER_COLOR = "#EEEEEE";
+	const DEFAULT_DIVIDER_HEIGHT = 60;
+	const DEFAULT_DIVIDER_COLOR = "#BBBBBB";
+	const DEFAULT_ANIM_DELAY = 60;
 
 	const BAR_DATA: IBarGraphData[] = useMemo(() => {
 		return [
@@ -69,6 +79,7 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 		];
 	}, []);
 
+	const [randomNum, setRandomNum] = useState<number>(0);
 	const [graphData, setGraphData] = useState<IBarGraphData[]>([]);
 	const [inputDataLabel, setInputDataLabel] = useState("");
 	const [inputDataValue, setInputDataValue] = useState(0);
@@ -82,7 +93,23 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 		}
 	}, []);
 	const [title, setTitle] = useState("");
-	const [titlePosition, setTitlePosition] = useState<"top" | "bottom">("top");
+	const [titlePosition, setTitlePosition] = useState<"top" | "bottom">(DEFAULT_TITLE_POSITION);
+	const [barHeight, setBarHeight] = useState<number>(DEFAULT_BAR_HEIGHT);
+	const [barDistance, setBarDistance] = useState<number>(DEFAULT_BAR_DISTANCE);
+	const [barHolderColor, setBarHolderColor] = useState<Property.Color>(DEFAULT_HOLDER_COLOR);
+	const [barAnimated, setBarAnimated] = useState<boolean>(true);
+	const [barAnimateDelay, setBarAnimateDelay] = useState<number>(DEFAULT_ANIM_DELAY);
+	const [barLeftStyle, setBarLeftStyle] = useState<"rounded" | "square">("rounded");
+	const [barRightStyle, setBarRightStyle] = useState<"rounded" | "square">("rounded");
+	const [barHolderRightStyle, setBarHolderRightStyle] = useState<"rounded" | "square">("rounded");
+	const [showDivider, setShowDivider] = useState<boolean>(true);
+	const [dividerInterver, setDividerInterver] = useState<20 | 4 | 5 | 10 | 25 | 33.3 | 50>(20);
+	const [dividerHeight, setDividerHeight] = useState<number>(DEFAULT_DIVIDER_HEIGHT);
+	const [dividerColor, setDividerColor] = useState<Property.Color>(DEFAULT_DIVIDER_COLOR);
+	const [dividerWidth, setDividerWidth] = useState<number>(1);
+	const [percentPosition, setPercentPosition] = useState<"none" | "left" | "right">("right");
+	const [percentFixed, setPercentFixed] = useState<0 | 1 | 2>(0);
+	const [enableTouchHighlight, setEnableTouchHighlight] = useState(true);
 
 	//////////////////////////////
 	const [screenWidth, setScreenWidth] = useState(DEFAULT_SCREEN_WIDTH);
@@ -103,11 +130,35 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 	// TODO:
 	const resetAll = useCallback(() => {
 		setGraphData([]);
+
 		setInputDataLabel("");
 		setInputDataValue(0);
 		setInputDataColor(undefined);
+
 		setTotalCnt(undefined);
+
 		setTitle("");
+		setTitlePosition(DEFAULT_TITLE_POSITION);
+
+		setBarHeight(DEFAULT_BAR_HEIGHT);
+		setBarDistance(DEFAULT_BAR_DISTANCE);
+		setBarHolderColor(DEFAULT_HOLDER_COLOR);
+		setBarAnimated(true);
+		setBarAnimateDelay(DEFAULT_ANIM_DELAY);
+		setBarLeftStyle("rounded");
+		setBarRightStyle("rounded");
+		setBarHolderRightStyle("rounded");
+
+		setShowDivider(true);
+		setDividerInterver(20);
+		setDividerHeight(DEFAULT_DIVIDER_HEIGHT);
+		setDividerColor(DEFAULT_DIVIDER_COLOR);
+		setDividerWidth(1);
+
+		setPercentPosition("right");
+		setPercentFixed(0);
+
+		setEnableTouchHighlight(true);
 
 		// setScreenWidth(DEFAULT_SCREEN_WIDTH);
 		// setNoRoundedScreen(false);
@@ -211,18 +262,38 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 				style={{ display: "flex", alignItems: "flex-start" }}>
 				<div ref={ref}>
 					<BarGraph
-						className={demoStyle.card}
-						style={{ borderRadius: 30, padding: 20, width: 400 }}
+						key={randomNum}
 						graphData={graphData.length > 0 ? graphData : BAR_DATA}
 						totalCnt={totalCnt}
+						style={{ borderRadius: 30, padding: 20, width: 300 }}
+						className={demoStyle.card}
 						title={title}
 						titleStyle={{ color: "#555555", marginTop: 8, marginBottom: 8 }}
 						titlePosition={titlePosition}
+						barHeight={barHeight}
+						barDistance={barDistance}
+						barHolderColor={barHolderColor}
+						barAnimated={barAnimated}
+						barAnimateDelay={barAnimateDelay}
+						barLeftStyle={barLeftStyle}
+						barRightStyle={barRightStyle}
+						barHolderRightStyle={barHolderRightStyle}
+						showDivider={showDivider}
+						dividerInterver={dividerInterver}
+						dividerHeight={dividerHeight}
+						dividerColor={dividerColor}
+						dividerWidth={dividerWidth}
+						percentPosition={percentPosition}
+						percentFixed={percentFixed}
+						// TODO:
+						// PercentLabelComponent={PercentLabelComponent}
+						enableTouchHighlight={enableTouchHighlight}
 					/>
 				</div>
 			</div>
 			{/* control panel */}
-			<div className={`${demoStyle.flexColWrap} ${demoStyle.flexBox}`}>
+			<div className={`${demoStyle.flexColWrap} ${demoStyle.flexBox}`} style={{ flex: 1 }}>
+				{/* Reset All, Download */}
 				<div className={demoStyle.flexRowWrap}>
 					<ColorButton
 						label="Reset All"
@@ -236,6 +307,20 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 							marginRight: 8,
 						}}
 						onClick={resetAll}
+					/>
+					<ColorButton
+						label="🔄️ Reload"
+						isActive={false}
+						showIcon={false}
+						style={{
+							flex: 1,
+							paddingTop: 8,
+							paddingBottom: 8,
+							justifyContent: "center",
+							marginRight: 8,
+							marginLeft: 8,
+						}}
+						onClick={() => setRandomNum(moment().valueOf())}
 					/>
 					<ColorButton
 						label="Download Png"
@@ -260,19 +345,11 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 						}}
 						onSubmit={event => {
 							event.preventDefault();
-
 							const newItem: IBarGraphData = {
 								label: inputDataLabel,
 								value: inputDataValue,
 								color: inputDataColor,
 							};
-							console.log(
-								"@@@ input",
-								inputDataLabel,
-								inputDataValue,
-								inputDataColor,
-							);
-
 							setGraphData(prev => [...prev, newItem]);
 						}}>
 						<div style={{ display: "flex" }}>
@@ -329,201 +406,295 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 						</div>
 					</form>
 				</div>
+				{/* Common */}
 				<h3 className={demoStyle.cardTitle}>Common</h3>
-				<div className={`${demoStyle.card} ${demoStyle.flexColWrap} ${demoStyle.pt8}`}>
-					<div className={`${demoStyle.flexRowWrap} ${demoStyle.flexAlignEnd}`}>
-						<InputButton
-							className={demoStyle["mt8mr30"]}
-							label="totalCnt"
-							inputType="number"
-							placeholder="totalCnt"
-							value={totalCnt?.toString()}
-							onClickSubmit={onClickTotalCnt}
-						/>
-						<InputButton
-							className={demoStyle["mt8mr30"]}
-							label="title"
-							inputType="text"
-							placeholder="title"
-							value={title}
-							onClickSubmit={setTitle}
-						/>
-						<ButtonGroup
-							className={demoStyle["mt8mr30"]}
-							title="titlePosition"
-							buttonData={[
-								{
-									label: "top",
-									isActive: titlePosition === "top",
-									onClick: () => setTitlePosition("top"),
-								},
-								{
-									label: "bottom",
-									isActive: titlePosition === "bottom",
-									onClick: () => setTitlePosition("bottom"),
-								},
-							]}
-						/>
-					</div>
-					<div className={demoStyle.flexRowWrap}>
-						<ColorButton
-							label="isLandscape"
-							isActive={isLandscape}
-							showIcon
-							className={demoStyle["mt16mr16"]}
-							onClick={() => setIsLandscape(prev => !prev)}
-						/>
-						<ColorButton
-							label="noRoundedScreen"
-							isActive={noRoundedScreen}
-							showIcon
-							className={demoStyle["mt16mr16"]}
-							onClick={() => setNoRoundedScreen(prev => !prev)}
-						/>
-						<ColorButton
-							label="showScreenDemo"
-							isActive={showScreenDemo}
-							showIcon
-							className={demoStyle["mt16mr16"]}
-							onClick={() => setShowScreenDemo(prev => !prev)}
-						/>
-					</div>
+				<div
+					className={`${demoStyle.card} ${demoStyle.flexRowWrap} ${demoStyle.pt8} ${demoStyle.flexAlignEnd}`}>
+					<InputButton
+						className={demoStyle["mt8mr30"]}
+						label="totalCnt"
+						inputType="number"
+						placeholder="totalCnt"
+						value={totalCnt?.toString()}
+						onClickSubmit={onClickTotalCnt}
+					/>
+					<InputButton
+						className={demoStyle["mt8mr30"]}
+						label="title"
+						inputType="text"
+						placeholder="title"
+						value={title}
+						onClickSubmit={setTitle}
+					/>
+					<ButtonGroup
+						className={demoStyle["mt8mr30"]}
+						title="titlePosition"
+						buttonData={[
+							{
+								label: "top",
+								isActive: titlePosition === "top",
+								onClick: () => setTitlePosition("top"),
+							},
+							{
+								label: "bottom",
+								isActive: titlePosition === "bottom",
+								onClick: () => setTitlePosition("bottom"),
+							},
+						]}
+					/>
+					<ColorButton
+						label="enableTouchHighlight"
+						isActive={enableTouchHighlight}
+						showIcon
+						className={demoStyle["mt16mr16"]}
+						onClick={() => setEnableTouchHighlight(prev => !prev)}
+					/>
+					<div className={`${demoStyle.flexRowWrap} ${demoStyle.flexAlignEnd}`}></div>
 				</div>
 
-				<h3 className={demoStyle.cardTitle}>Frame</h3>
+				{/* Bar */}
+				<h3 className={demoStyle.cardTitle}>Bar</h3>
 				<div
 					className={`${demoStyle.card} ${demoStyle.flexRowWrap} ${demoStyle.flexAlignEnd} ${demoStyle.pt8}`}>
+					<InputButton
+						label="barHeight"
+						inputType="number"
+						defaultVal={DEFAULT_BAR_HEIGHT.toString()}
+						placeholder="barHeight"
+						className={demoStyle["mt8mr30"]}
+						onClickSubmit={inputVal => {
+							setBarHeight(Number(inputVal));
+						}}
+					/>
+					<InputButton
+						label="barDistance"
+						inputType="number"
+						defaultVal={DEFAULT_BAR_DISTANCE.toString()}
+						placeholder="barDistance"
+						className={demoStyle["mt8mr30"]}
+						onClickSubmit={inputVal => {
+							setBarDistance(Number(inputVal));
+						}}
+					/>
 					<div className={demoStyle.flexAlignEnd + " " + demoStyle["mt8mr30"]}>
 						<InputButton
-							label="frameColor"
+							label="barHolderColor"
 							inputType="text"
-							defaultVal={DEFAULT_FRAME_COLOR}
-							placeholder="frameColor"
+							defaultVal={DEFAULT_HOLDER_COLOR.toString()}
+							placeholder="barHolderColor"
 							onClickSubmit={inputVal => {
-								setFrameColor(inputVal);
+								setBarHolderColor(inputVal);
 							}}
 						/>
-						<span
-							className={demoStyle.colorSample}
-							style={{ backgroundColor: frameColor }}
+						<ColorSample
+							color={barHolderColor}
+							style={{ margin: 0, marginBottom: 2, marginLeft: 8 }}
 						/>
 					</div>
 					<ColorButton
-						label="frameOnly"
-						isActive={frameOnly}
+						label="barAnimated"
+						isActive={barAnimated}
 						showIcon
 						className={demoStyle["mt16mr16"]}
-						onClick={() => setFrameOnly(prev => !prev)}
+						onClick={() => setBarAnimated(prev => !prev)}
+					/>
+					<InputButton
+						label="barAnimateDelay (ms)"
+						inputType="number"
+						defaultVal={DEFAULT_ANIM_DELAY.toString()}
+						placeholder="barAnimateDelay"
+						className={demoStyle["mt8mr30"]}
+						onClickSubmit={inputVal => {
+							setBarAnimateDelay(Number(inputVal));
+						}}
+					/>
+					<ButtonGroup
+						className={demoStyle["mt8mr30"]}
+						title="barLeftStyle"
+						buttonData={[
+							{
+								label: "rounded",
+								isActive: barLeftStyle === "rounded",
+								onClick: () => setBarLeftStyle("rounded"),
+							},
+							{
+								label: "square",
+								isActive: barLeftStyle === "square",
+								onClick: () => setBarLeftStyle("square"),
+							},
+						]}
+					/>
+					<ButtonGroup
+						className={demoStyle["mt8mr30"]}
+						title="barRightStyle"
+						buttonData={[
+							{
+								label: "rounded",
+								isActive: barRightStyle === "rounded",
+								onClick: () => setBarRightStyle("rounded"),
+							},
+							{
+								label: "square",
+								isActive: barRightStyle === "square",
+								onClick: () => setBarRightStyle("square"),
+							},
+						]}
+					/>
+					<ButtonGroup
+						className={demoStyle["mt8mr30"]}
+						title="barHolderRightStyle"
+						buttonData={[
+							{
+								label: "rounded",
+								isActive: barHolderRightStyle === "rounded",
+								onClick: () => setBarHolderRightStyle("rounded"),
+							},
+							{
+								label: "square",
+								isActive: barHolderRightStyle === "square",
+								onClick: () => setBarHolderRightStyle("square"),
+							},
+						]}
 					/>
 				</div>
 
-				<h3 className={demoStyle.cardTitle}>Statusbar</h3>
+				{/* Divider */}
+				<h3 className={demoStyle.cardTitle}>Divider</h3>
 				<div
 					className={`${demoStyle.card} ${demoStyle.flexRowWrap} ${demoStyle.flexAlignEnd} ${demoStyle.pt8}`}>
-					<div className={demoStyle.flexAlignEnd + " " + demoStyle["mt8mr30"]}>
-						<InputButton
-							label="statusbarColor"
-							inputType="text"
-							defaultVal={DEFAULT_STATUS_BAR_COLOR}
-							placeholder="statusbarColor"
-							onClickSubmit={inputVal => {
-								setStatusbarColor(inputVal);
-							}}
-						/>
-						<span
-							className={demoStyle.colorSample}
-							style={{ backgroundColor: statusbarColor }}
-						/>
-					</div>
 					<ColorButton
-						label="hideStatusBar"
-						isActive={hideStatusBar}
+						label="showDivider"
+						isActive={showDivider}
 						showIcon
 						className={demoStyle["mt16mr16"]}
-						onClick={() => setHideStatusBar(prev => !prev)}
+						onClick={() => setShowDivider(prev => !prev)}
+					/>
+					<ButtonGroup
+						title="dividerInterver"
+						className={demoStyle["mt8mr30"]}
+						buttonSize={50}
+						buttonData={[
+							{
+								label: "4",
+								isActive: dividerInterver === 4,
+								onClick: () => setDividerInterver(4),
+							},
+							{
+								label: "5",
+								isActive: dividerInterver === 5,
+								onClick: () => setDividerInterver(5),
+							},
+							{
+								label: "10",
+								isActive: dividerInterver === 10,
+								onClick: () => setDividerInterver(10),
+							},
+							{
+								label: "20",
+								isActive: dividerInterver === 20,
+								onClick: () => setDividerInterver(20),
+							},
+							{
+								label: "25",
+								isActive: dividerInterver === 25,
+								onClick: () => setDividerInterver(25),
+							},
+							{
+								label: "33.3",
+								isActive: dividerInterver === 33.3,
+								onClick: () => setDividerInterver(33.3),
+							},
+							{
+								label: "50",
+								isActive: dividerInterver === 50,
+								onClick: () => setDividerInterver(50),
+							},
+						]}
+					/>
+					<InputButton
+						label="dividerHeight (%)"
+						inputType="number"
+						defaultVal={DEFAULT_DIVIDER_HEIGHT.toString()}
+						placeholder="dividerHeight"
+						className={demoStyle["mt8mr30"]}
+						onClickSubmit={inputVal => {
+							setDividerHeight(Number(inputVal));
+						}}
+					/>
+					<div className={demoStyle.flexAlignEnd + " " + demoStyle["mt8mr30"]}>
+						<InputButton
+							label="dividerColor"
+							inputType="text"
+							defaultVal={DEFAULT_DIVIDER_COLOR.toString()}
+							placeholder="dividerColor"
+							onClickSubmit={inputVal => {
+								setDividerColor(inputVal);
+							}}
+						/>
+						<ColorSample
+							color={dividerColor}
+							style={{ margin: 0, marginBottom: 2, marginLeft: 8 }}
+						/>
+					</div>
+					<InputButton
+						label="dividerWidth"
+						inputType="number"
+						defaultVal={"1"}
+						placeholder="dividerWidth"
+						className={demoStyle["mt8mr30"]}
+						onClickSubmit={inputVal => {
+							setDividerWidth(Number(inputVal));
+						}}
 					/>
 				</div>
 
-				<h3 className={demoStyle.cardTitle}>Navigation Bar</h3>
+				{/* Percent Label */}
+				<h3 className={demoStyle.cardTitle}>Percent Label</h3>
 				<div className={`${demoStyle.card} ${demoStyle.flexColWrap} ${demoStyle.pt8}`}>
-					<div className={`${demoStyle.flexRowWrap} ${demoStyle.flexAlignEnd}`}>
-						<ButtonGroup
-							title="navBar"
-							className={demoStyle["mt8mr30"]}
-							buttonData={[
-								{
-									label: "swipe",
-									isActive: navBar === "swipe",
-									onClick: () => setNavBar("swipe"),
-								},
-								{
-									label: "bhr",
-									isActive: navBar === "bhr",
-									onClick: () => setNavBar("bhr"),
-								},
-								{
-									label: "rhb",
-									isActive: navBar === "rhb",
-									onClick: () => setNavBar("rhb"),
-								},
-							]}
-						/>
-						<div className={demoStyle.flexAlignEnd + " " + demoStyle["mt8mr30"]}>
-							<InputButton
-								label="navBarColor"
-								inputType="text"
-								defaultVal={DEFAULT_STATUS_BAR_COLOR}
-								placeholder="navBarColor"
-								onClickSubmit={inputVal => {
-									setNavBarColor(inputVal);
-								}}
-							/>
-							<span
-								className={demoStyle.colorSample}
-								style={{ backgroundColor: navBarColor }}
-							/>
-						</div>
-					</div>
-					<div className={demoStyle.flexRowWrap + " " + demoStyle.flexAlignEnd}>
-						<ColorButton
-							label="transparentNavBar"
-							isActive={transparentNavBar}
-							showIcon
-							className={demoStyle["mt16mr16"]}
-							onClick={() => setTransparentNavBar(prev => !prev)}
-						/>
-						<ColorButton
-							label="hideNavBar"
-							isActive={hideNavBar}
-							showIcon
-							className={demoStyle["mt16mr16"]}
-							onClick={() => setHideNavBar(prev => !prev)}
-						/>
-						{props.mode === "phone" && (
-							<ColorButton
-								label="transparentCamArea"
-								isActive={transparentCamArea}
-								showIcon
-								className={demoStyle["mt16mr16"]}
-								onClick={() => setTransparentCamArea(prev => !prev)}
-							/>
-						)}
-					</div>
+					<ButtonGroup
+						title="percentPosition"
+						className={demoStyle["mt8mr30"]}
+						buttonData={[
+							{
+								label: "none",
+								isActive: percentPosition === "none",
+								onClick: () => setPercentPosition("none"),
+							},
+							{
+								label: "left",
+								isActive: percentPosition === "left",
+								onClick: () => setPercentPosition("left"),
+							},
+							{
+								label: "right",
+								isActive: percentPosition === "right",
+								onClick: () => setPercentPosition("right"),
+							},
+						]}
+					/>
+					<ButtonGroup
+						title="percentFixed"
+						className={demoStyle["mt8mr30"]}
+						buttonData={[
+							{
+								label: "0",
+								isActive: percentFixed === 0,
+								onClick: () => setPercentFixed(0),
+							},
+							{
+								label: "1",
+								isActive: percentFixed === 1,
+								onClick: () => setPercentFixed(1),
+							},
+							{
+								label: "2",
+								isActive: percentFixed === 2,
+								onClick: () => setPercentFixed(2),
+							},
+						]}
+					/>
 				</div>
-				{props.mode === "phone" && (
-					<div
-						className={demoStyle.subLabel}
-						style={{
-							display: "initial",
-							marginLeft: 16,
-							marginTop: 4,
-							textAlign: "center",
-						}}>
-						⚠️ <code className={demoStyle.code}>transparentCamArea</code> only works
-						when
-						<code className={demoStyle.code}> isLandscape=true</code>
-					</div>
-				)}
+
 				{/* code */}
 				<CodeBlock title="Code" sampleCode={samplecode} />
 			</div>

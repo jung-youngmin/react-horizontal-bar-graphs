@@ -50,9 +50,10 @@ function App() {
 				isActive={showBarGraphDemo}
 				onClick={() => setShowBarGraphDemo(prev => !prev)}
 			/>
-			{showBarGraphDemo && (
+			<BarGraphDemo mode="phone" showDemo={showBarGraphDemo} onPressPng={onPressPng} />
+			{/* {showBarGraphDemo && (
 				<BarGraphDemo mode="phone" showDemo={showBarGraphDemo} onPressPng={onPressPng} />
-			)}
+			)} */}
 
 			<TouchableTitle
 				title="📞 IPhoneMockup"

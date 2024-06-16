@@ -67,7 +67,9 @@ export default function ButtonGroup(props: IButtonGroupProps) {
 	return (
 		<div className={props.className} style={{ ...props.style }}>
 			<div className={styles.subLabel}>{props.title}</div>
-			<div style={{ display: "flex" }}>{props.buttonData.map(renderButtons)}</div>
+			<div style={{ display: "flex", flexWrap: "wrap" }}>
+				{props.buttonData.map(renderButtons)}
+			</div>
 		</div>
 	);
 }
