@@ -59,6 +59,11 @@
 	flex-wrap: wrap;
 }
 
+.flexCol {
+	display: flex;
+	flex-direction: column;
+}
+
 .flexColWrap {
 	display: flex;
 	flex-direction: column;
@@ -85,6 +90,11 @@
 .mt8mr30 {
 	margin-top: 8px;
 	margin-right: 30px;
+}
+
+.mt8mr16 {
+	margin-top: 8px;
+	margin-right: 16px;
 }
 
 .mt16mr16 {

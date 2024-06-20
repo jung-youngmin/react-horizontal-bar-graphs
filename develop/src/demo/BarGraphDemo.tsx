@@ -9,6 +9,7 @@ import moment from "moment";
 import ColorPalette from "../components/ColorPalette";
 import ColorSample from "../components/ColorSample";
 import Input from "../components/Input";
+import TouchableTitle from "../components/TouchableTitle";
 import { BarGraph, IBarGraphData } from "../dist";
 import CodeBlock from "./CodeBlock";
 import demoStyle from "./demo.module.css";
@@ -26,10 +27,15 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 	const DEFAULT_TITLE_POSITION = "top";
 	const DEFAULT_BAR_HEIGHT = 28;
 	const DEFAULT_BAR_DISTANCE = 12;
+	const DEFAULT_BAR_STYLE = "rounded";
 	const DEFAULT_HOLDER_COLOR = "#EEEEEE";
 	const DEFAULT_DIVIDER_HEIGHT = 60;
 	const DEFAULT_DIVIDER_COLOR = "#BBBBBB";
 	const DEFAULT_ANIM_DELAY = 60;
+	const DEFAULT_PERCENT_POSITION = "right";
+	const DEFAULT_LABEL_POSITION = "top";
+	const DEFAULT_VALUE_POSITION = "right";
+	const DEFAULT_SUFFIX_LIST = ["k", "m", "b", "t"];
 
 	const BAR_DATA: IBarGraphData[] = useMemo(() => {
 		return [
@@ -99,17 +105,29 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 	const [barHolderColor, setBarHolderColor] = useState<Property.Color>(DEFAULT_HOLDER_COLOR);
 	const [barAnimated, setBarAnimated] = useState<boolean>(true);
 	const [barAnimateDelay, setBarAnimateDelay] = useState<number>(DEFAULT_ANIM_DELAY);
-	const [barLeftStyle, setBarLeftStyle] = useState<"rounded" | "square">("rounded");
-	const [barRightStyle, setBarRightStyle] = useState<"rounded" | "square">("rounded");
-	const [barHolderRightStyle, setBarHolderRightStyle] = useState<"rounded" | "square">("rounded");
+	const [barLeftStyle, setBarLeftStyle] = useState<"rounded" | "square">(DEFAULT_BAR_STYLE);
+	const [barRightStyle, setBarRightStyle] = useState<"rounded" | "square">(DEFAULT_BAR_STYLE);
+	const [barHolderRightStyle, setBarHolderRightStyle] = useState<"rounded" | "square">(
+		DEFAULT_BAR_STYLE,
+	);
 	const [showDivider, setShowDivider] = useState<boolean>(true);
 	const [dividerInterver, setDividerInterver] = useState<20 | 4 | 5 | 10 | 25 | 33.3 | 50>(20);
 	const [dividerHeight, setDividerHeight] = useState<number>(DEFAULT_DIVIDER_HEIGHT);
 	const [dividerColor, setDividerColor] = useState<Property.Color>(DEFAULT_DIVIDER_COLOR);
 	const [dividerWidth, setDividerWidth] = useState<number>(1);
-	const [percentPosition, setPercentPosition] = useState<"none" | "left" | "right">("right");
+	const [percentPosition, setPercentPosition] = useState<"none" | "left" | "right">(
+		DEFAULT_PERCENT_POSITION,
+	);
 	const [percentFixed, setPercentFixed] = useState<0 | 1 | 2>(0);
 	const [enableTouchHighlight, setEnableTouchHighlight] = useState(true);
+
+	const [showLabel, setShowLabel] = useState(true);
+	const [labelPosition, setLabelPosition] = useState<"top" | "bottom">(DEFAULT_LABEL_POSITION);
+
+	const [showValue, setShowValue] = useState(true);
+	const [valuePosition, setValuePosition] = useState<"left" | "right">(DEFAULT_VALUE_POSITION);
+	const [valueSuffixCnt, setValueSuffixCnt] = useState<number>(1000);
+	const [valueSuffixList, setValueSuffixList] = useState<string[]>(DEFAULT_SUFFIX_LIST);
 
 	//////////////////////////////
 	const [screenWidth, setScreenWidth] = useState(DEFAULT_SCREEN_WIDTH);
@@ -145,9 +163,9 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 		setBarHolderColor(DEFAULT_HOLDER_COLOR);
 		setBarAnimated(true);
 		setBarAnimateDelay(DEFAULT_ANIM_DELAY);
-		setBarLeftStyle("rounded");
-		setBarRightStyle("rounded");
-		setBarHolderRightStyle("rounded");
+		setBarLeftStyle(DEFAULT_BAR_STYLE);
+		setBarRightStyle(DEFAULT_BAR_STYLE);
+		setBarHolderRightStyle(DEFAULT_BAR_STYLE);
 
 		setShowDivider(true);
 		setDividerInterver(20);
@@ -155,10 +173,18 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 		setDividerColor(DEFAULT_DIVIDER_COLOR);
 		setDividerWidth(1);
 
-		setPercentPosition("right");
+		setPercentPosition(DEFAULT_PERCENT_POSITION);
 		setPercentFixed(0);
 
 		setEnableTouchHighlight(true);
+
+		setShowLabel(true);
+		setLabelPosition(DEFAULT_LABEL_POSITION);
+
+		setShowValue(true);
+		setValuePosition(DEFAULT_VALUE_POSITION);
+		setValueSuffixCnt(1000);
+		setValueSuffixList(DEFAULT_SUFFIX_LIST);
 
 		// setScreenWidth(DEFAULT_SCREEN_WIDTH);
 		// setNoRoundedScreen(false);
@@ -175,6 +201,7 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 		// setShowScreenDemo(false);
 	}, []);
 
+	// TODO:
 	const samplecode = useMemo(() => {
 		let code = props.mode === "phone" ? "<AndroidMockup" : "<AndroidTabMockup";
 		code += `\n  screenWidth={${screenWidth}}`;
@@ -288,6 +315,15 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 						// TODO:
 						// PercentLabelComponent={PercentLabelComponent}
 						enableTouchHighlight={enableTouchHighlight}
+						showLabel={showLabel}
+						labelPosition={labelPosition}
+						// TODO:
+						// labelStyle
+						// labelClassName
+						showValue={showValue}
+						valuePosition={valuePosition}
+						valueSuffixCnt={valueSuffixCnt}
+						valueSuffixList={valueSuffixList}
 					/>
 				</div>
 			</div>
@@ -337,6 +373,7 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 					/>
 				</div>
 				<h3 className={demoStyle.cardTitle}>Graph Data</h3>
+				<TouchableTitle title="Graph Data" hNum={3} isActive onClick={() => {}} />
 				<div className={`${demoStyle.card} ${demoStyle.flexColWrap} ${demoStyle.pt8}`}>
 					<form
 						style={{
@@ -454,108 +491,113 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 
 				{/* Bar */}
 				<h3 className={demoStyle.cardTitle}>Bar</h3>
-				<div
-					className={`${demoStyle.card} ${demoStyle.flexRowWrap} ${demoStyle.flexAlignEnd} ${demoStyle.pt8}`}>
-					<InputButton
-						label="barHeight"
-						inputType="number"
-						defaultVal={DEFAULT_BAR_HEIGHT.toString()}
-						placeholder="barHeight"
-						className={demoStyle["mt8mr30"]}
-						onClickSubmit={inputVal => {
-							setBarHeight(Number(inputVal));
-						}}
-					/>
-					<InputButton
-						label="barDistance"
-						inputType="number"
-						defaultVal={DEFAULT_BAR_DISTANCE.toString()}
-						placeholder="barDistance"
-						className={demoStyle["mt8mr30"]}
-						onClickSubmit={inputVal => {
-							setBarDistance(Number(inputVal));
-						}}
-					/>
-					<div className={demoStyle.flexAlignEnd + " " + demoStyle["mt8mr30"]}>
+				<div className={`${demoStyle.card} ${demoStyle.flexCol} ${demoStyle.pt8}`}>
+					<div className={demoStyle.flexRowWrap + " " + demoStyle.flexAlignEnd}>
+						<ColorButton
+							label="barAnimated"
+							isActive={barAnimated}
+							showIcon
+							className={demoStyle["mt16mr16"]}
+							onClick={() => setBarAnimated(prev => !prev)}
+						/>
 						<InputButton
-							label="barHolderColor"
-							inputType="text"
-							defaultVal={DEFAULT_HOLDER_COLOR.toString()}
-							placeholder="barHolderColor"
+							label="barAnimateDelay (ms)"
+							inputType="number"
+							defaultVal={DEFAULT_ANIM_DELAY.toString()}
+							placeholder="barAnimateDelay"
+							className={demoStyle["mt8"]}
 							onClickSubmit={inputVal => {
-								setBarHolderColor(inputVal);
+								setBarAnimateDelay(Number(inputVal));
 							}}
 						/>
-						<ColorSample
-							color={barHolderColor}
-							style={{ margin: 0, marginBottom: 2, marginLeft: 8 }}
+					</div>
+					<div className={demoStyle.flexRowWrap}>
+						<InputButton
+							label="barHeight"
+							inputType="number"
+							defaultVal={DEFAULT_BAR_HEIGHT.toString()}
+							placeholder="barHeight"
+							className={demoStyle["mt8mr30"]}
+							onClickSubmit={inputVal => {
+								setBarHeight(Number(inputVal));
+							}}
+						/>
+						<InputButton
+							label="barDistance"
+							inputType="number"
+							defaultVal={DEFAULT_BAR_DISTANCE.toString()}
+							placeholder="barDistance"
+							className={demoStyle["mt8mr30"]}
+							onClickSubmit={inputVal => {
+								setBarDistance(Number(inputVal));
+							}}
+						/>
+						<div className={demoStyle.flexAlignEnd + " " + demoStyle["mt8mr30"]}>
+							<InputButton
+								label="barHolderColor"
+								inputType="text"
+								defaultVal={DEFAULT_HOLDER_COLOR.toString()}
+								placeholder="barHolderColor"
+								onClickSubmit={inputVal => {
+									setBarHolderColor(inputVal);
+								}}
+							/>
+							<ColorSample
+								color={barHolderColor}
+								style={{ margin: 0, marginBottom: 2, marginLeft: 8 }}
+							/>
+						</div>
+					</div>
+					<div className={demoStyle.flexRowWrap}>
+						<ButtonGroup
+							className={demoStyle["mt8mr16"]}
+							title="barLeftStyle"
+							buttonData={[
+								{
+									label: "rounded",
+									isActive: barLeftStyle === "rounded",
+									onClick: () => setBarLeftStyle("rounded"),
+								},
+								{
+									label: "square",
+									isActive: barLeftStyle === "square",
+									onClick: () => setBarLeftStyle("square"),
+								},
+							]}
+						/>
+						<ButtonGroup
+							className={demoStyle["mt8mr16"]}
+							title="barRightStyle"
+							buttonData={[
+								{
+									label: "rounded",
+									isActive: barRightStyle === "rounded",
+									onClick: () => setBarRightStyle("rounded"),
+								},
+								{
+									label: "square",
+									isActive: barRightStyle === "square",
+									onClick: () => setBarRightStyle("square"),
+								},
+							]}
+						/>
+						<ButtonGroup
+							className={demoStyle["mt8"]}
+							title="barHolderRightStyle"
+							buttonData={[
+								{
+									label: "rounded",
+									isActive: barHolderRightStyle === "rounded",
+									onClick: () => setBarHolderRightStyle("rounded"),
+								},
+								{
+									label: "square",
+									isActive: barHolderRightStyle === "square",
+									onClick: () => setBarHolderRightStyle("square"),
+								},
+							]}
 						/>
 					</div>
-					<ColorButton
-						label="barAnimated"
-						isActive={barAnimated}
-						showIcon
-						className={demoStyle["mt16mr16"]}
-						onClick={() => setBarAnimated(prev => !prev)}
-					/>
-					<InputButton
-						label="barAnimateDelay (ms)"
-						inputType="number"
-						defaultVal={DEFAULT_ANIM_DELAY.toString()}
-						placeholder="barAnimateDelay"
-						className={demoStyle["mt8mr30"]}
-						onClickSubmit={inputVal => {
-							setBarAnimateDelay(Number(inputVal));
-						}}
-					/>
-					<ButtonGroup
-						className={demoStyle["mt8mr30"]}
-						title="barLeftStyle"
-						buttonData={[
-							{
-								label: "rounded",
-								isActive: barLeftStyle === "rounded",
-								onClick: () => setBarLeftStyle("rounded"),
-							},
-							{
-								label: "square",
-								isActive: barLeftStyle === "square",
-								onClick: () => setBarLeftStyle("square"),
-							},
-						]}
-					/>
-					<ButtonGroup
-						className={demoStyle["mt8mr30"]}
-						title="barRightStyle"
-						buttonData={[
-							{
-								label: "rounded",
-								isActive: barRightStyle === "rounded",
-								onClick: () => setBarRightStyle("rounded"),
-							},
-							{
-								label: "square",
-								isActive: barRightStyle === "square",
-								onClick: () => setBarRightStyle("square"),
-							},
-						]}
-					/>
-					<ButtonGroup
-						className={demoStyle["mt8mr30"]}
-						title="barHolderRightStyle"
-						buttonData={[
-							{
-								label: "rounded",
-								isActive: barHolderRightStyle === "rounded",
-								onClick: () => setBarHolderRightStyle("rounded"),
-							},
-							{
-								label: "square",
-								isActive: barHolderRightStyle === "square",
-								onClick: () => setBarHolderRightStyle("square"),
-							},
-						]}
-					/>
 				</div>
 
 				{/* Divider */}
@@ -650,7 +692,7 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 
 				{/* Percent Label */}
 				<h3 className={demoStyle.cardTitle}>Percent Label</h3>
-				<div className={`${demoStyle.card} ${demoStyle.flexColWrap} ${demoStyle.pt8}`}>
+				<div className={`${demoStyle.card} ${demoStyle.flexRowWrap} ${demoStyle.pt8}`}>
 					<ButtonGroup
 						title="percentPosition"
 						className={demoStyle["mt8mr30"]}
@@ -693,6 +735,86 @@ export default function BarGraphDemo(props: IAndroidDemoProps) {
 							},
 						]}
 					/>
+					{/* TODO: PercentLabelComponent */}
+				</div>
+
+				{/* Label & value */}
+				<h3 className={demoStyle.cardTitle}>Label & Value</h3>
+				<div className={`${demoStyle.card} ${demoStyle.flexCol} ${demoStyle.pt8}`}>
+					<div className={`${demoStyle.flexRowWrap} ${demoStyle.flexAlignEnd}`}>
+						<ColorButton
+							label="showLabel"
+							isActive={showLabel}
+							showIcon
+							className={demoStyle["mt16mr16"]}
+							onClick={() => setShowLabel(prev => !prev)}
+						/>
+						<ButtonGroup
+							title="labelPosition"
+							className={demoStyle["mt8"]}
+							buttonData={[
+								{
+									label: "top",
+									isActive: labelPosition === "top",
+									onClick: () => setLabelPosition("top"),
+								},
+								{
+									label: "bottom",
+									isActive: labelPosition === "bottom",
+									onClick: () => setLabelPosition("bottom"),
+								},
+							]}
+						/>
+					</div>
+					<div className={`${demoStyle.flexRowWrap} ${demoStyle.flexAlignEnd}`}>
+						<ColorButton
+							label="showValue"
+							isActive={showValue}
+							showIcon
+							className={demoStyle["mt16mr16"]}
+							onClick={() => setShowValue(prev => !prev)}
+						/>
+						<ButtonGroup
+							title="valuePosition"
+							className={demoStyle["mt8mr30"]}
+							buttonData={[
+								{
+									label: "left",
+									isActive: valuePosition === "left",
+									onClick: () => setValuePosition("left"),
+								},
+								{
+									label: "right",
+									isActive: valuePosition === "right",
+									onClick: () => setValuePosition("right"),
+								},
+							]}
+						/>
+						<InputButton
+							label="valueSuffixCnt"
+							inputType="number"
+							defaultVal={"1000"}
+							placeholder="valueSuffixCnt"
+							className={demoStyle["mt8mr30"]}
+							onClickSubmit={inputVal => {
+								setValueSuffixCnt(Number(inputVal));
+							}}
+						/>
+						<InputButton
+							label="valueSuffixList "
+							inputType="text"
+							defaultVal={DEFAULT_SUFFIX_LIST.toString()}
+							placeholder="valueSuffixList"
+							className={demoStyle["mt8"]}
+							onClickSubmit={inputVal => {
+								const noSpace = inputVal.replace(/ /g, "");
+								setValueSuffixList(noSpace.split(","));
+							}}
+						/>
+						<span className={demoStyle.subLabel} style={{ marginLeft: 8 }}>
+							Separate each Suffix using '<code className={demoStyle.code}>,</code>'
+						</span>
+					</div>
 				</div>
 
 				{/* code */}
