@@ -126,6 +126,18 @@
 	margin-top: 8px;
 }
 
+.mt16 {
+	margin-top: 16px;
+}
+
+.mr16 {
+	margin-right: 16px;
+}
+
+.mr30 {
+	margin-right: 30px;
+}
+
 .pt8 {
 	padding-top: 8px;
 }

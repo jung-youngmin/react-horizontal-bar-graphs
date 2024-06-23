@@ -33,7 +33,7 @@ function App() {
 		<div className={cssStyles.App}>
 			<header style={{ textAlign: "center" }}>
 				<h1 style={{ margin: 0 }}>Full Demo</h1>
-				<h2 style={{ margin: 0 }}>Device Mockup</h2>
+				<h2 style={{ margin: 0 }}>Horizontal Bar Graphs</h2>
 			</header>
 
 			{/* <PackageDemo /> */}
@@ -46,14 +46,11 @@ function App() {
 			{showInstallDemo && <InstallDemo />}
 
 			<TouchableTitle
-				title="📞 AndroidMockup"
+				title="📊 BarGraph"
 				isActive={showBarGraphDemo}
 				onClick={() => setShowBarGraphDemo(prev => !prev)}
 			/>
 			<BarGraphDemo mode="phone" showDemo={showBarGraphDemo} onPressPng={onPressPng} />
-			{/* {showBarGraphDemo && (
-				<BarGraphDemo mode="phone" showDemo={showBarGraphDemo} onPressPng={onPressPng} />
-			)} */}
 
 			<TouchableTitle
 				title="📞 IPhoneMockup"
