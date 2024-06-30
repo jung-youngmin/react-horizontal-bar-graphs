@@ -109,14 +109,12 @@ const BAR_DATA: IBarGraphData[] = [
 Basic data of graphs.  
 Used in both `<BarGraph/>` and `<StackedBar/>`
 
-| prop    | Required | Type             | Default | Description         |
-| -----   | :------: | ------------     | ------- | ------------------- |
-| label   | O        | `string`         |         | Label(name) of data |
-| value   | O        | `number`         |         | Number of data      |
-| color   | X        | `Property.Color` | [predefined colors](#color-ibargraphdata) | Color to be rendered to Bar.<br>[🔗 details](#color-ibargraphdata) |
-| onPress | X        | function         |         | A function that runs when the user touches the bar.<br>[🔗 details](#onpress-ibargraphdata) |
-
----
+| prop    | Required | Type             | Default           | Description         |
+| -----   | :------: | ------------     | ----------------- | ------------------- |
+| label   | O        | `string`         |                   | Label(name) of data |
+| value   | O        | `number`         |                   | Number of data      |
+| color   | X        | `Property.Color` | predefined colors | [🔗 color](#color-ibargraphdata) |
+| onPress | X        | `function`       |                   | [🔗 onPress](#onpress-ibargraphdata) |
 
 #### color (IBarGraphData)
 
@@ -124,7 +122,7 @@ Colors to be rendered to Bar.
 If you do not specify a color, the colors in `DEFAULT_COLORS` will be applied in a cycle. (modular operation)
 
 > **DEFAULT_COLORS** are
-> 
+>
 > <span style="background-color:coral; color:white">`"coral"`</span>  
 > <span style="background-color:cornflowerblue; color:white">`"cornflowerblue"`</span>  
 > <span style="background-color:crimson; color:white">`"crimson"`</span>  
@@ -139,9 +137,7 @@ If you do not specify a color, the colors in `DEFAULT_COLORS` will be applied in
 **NOTE:** `DEFAULT_COLORS` were selected from the
 [Named colors](https://reactnative.dev/docs/colors#named-colors) of React Native
 
-[🔼 back to table](#ibargraphdata)
-
----
+[🔼 back to `IBarGraphData`](#ibargraphdata)
 
 <br>
 
@@ -154,13 +150,14 @@ onPress?: (
   color: Property.Color,
 ) => void | Promise<void>;
 ```
+
 A function that runs when the user touches or clicks the bar.  
 `label`, `value`, and `color` are provided as parameters.
 
 **NOTE:** In `BarGraph`, it is triggered when the bar is touched  
-**NOTE:** In `StackedBar` it is triggered when an item in the list is touched.
+**NOTE:** In `StackedBar`, it is triggered when an item in the list is touched.
 
-[🔼 back to table](#ibargraphdata)
+[🔼 back to `IBarGraphData`](#ibargraphdata)
 
 ---
 
@@ -169,39 +166,158 @@ A function that runs when the user touches or clicks the bar.
 ### BarGraph
 
 only 1 required prop
-| prop                  | Required | Type                      | Default     | Description |
-| --------------------- | :------: | ------------------------- | ----------- | ----------- |
-| graphData             | O        | `IBarGraphData[]`         |             | Data to be rendered<br>[🔗 details](#ibargraphdata) |
-| totalCnt              | X        | `number`                  | sum of `graphData[0...n].value` | Total number of data.<br>Used as denominator when calculating percentages |
-| style                 | X        | `CSSProperties`           |             | Styles for graph containers |
-| className             | X        | `string`                  |             | Class name for graph containers |
-| title                 | X        | `string`                  |             | Title of graph<br>**NOTE:** If `title` is `undefined` or an empty string (`""`), it will not be rendered. |
-| titleStyle            | X        | `CSSProperties`           | `{fontWeight: "bold", fontSize: 20, textAlign: "center", marginVertical: 16}` | Styles for title |
-| titlePosition         | X        | `"top"`<br>`"bottom"`     | `"top"`     | Position of the title |
-| barHeight             | X        | `number`                  | `28`        | Height of each bar |
-| barHolderColor        | X        | `Property.Color`          | `"#EEEEEE"` | Placeholder color for bars |
-| barDistance           | X        | `number`                  | `12`        | Distance between bars<br>[barDistance (BarGraph only)](#bardistance-bargraph-only) |
-| barAnimated           | X        | `boolean`                 | `true`      | Whether to animate the bar |
-| barAnimateDelay       | X        | `number`                  | `60`        | Delay time (ms) at which the animation of the bars begins |
-| barLeftStyle          | X        | `"rounded"`<br>`"square"` | `"rounded"` | Left style of bar (both colored and holder).<br>[barLeftStyle](#barleftstyle-barrightstyle-barholderrightstyle) |
-| barRightStyle         | X        | `"rounded"`<br>`"square"` | `"rounded"` | Right style of colored bar.<br>[barRightStyle](#barleftstyle-barrightstyle-barholderrightstyle) |
-| barHolderRightStyle   | X        | `"rounded"`<br>`"square"` | `"rounded"` | Right style of placeholder of bar.<br>[barHolderRightStyle](#barleftstyle-barrightstyle-barholderrightstyle) |
-| showLabel             | X        | `boolean`                 | `true`      | Whether to show each label of graphData |
-| labelPosition         | X        | `"top"`<br>`"bottom"`     | `"top"`     | Position of each label relative to the bar |
-| labelStlye            | X        | `CSSProperties`           | `{ color: "#999999", fontSize: barHeight / 2 }` | Styles for label<br>**NOTE:** By default, fontSize is set to `barHeight/2`.<br>**NOTE:** When you touch the bar, the text color is highlighted in the same color as the bar. If you don't want it, set `enableTouchHighlight` to `false`. |
-| showValue             | X        | `boolean`                 | `true`      | Whether to show the value above the bar |
-| valuePosition         | X        | `"left"`<br>`"right"`     | `"right"`   | Position on the bar where the value is rendered<br>[valuePosition (BarGraph only)](#valueposition-bargraph-only) |
-| valueSuffixCnt        | X        | `number`                  | `1000`      | Number to attach suffix when `value` exceeds `valueSuffixCnt`<br>[valueSuffixCnt](#valuesuffixcnt--valuesuffixlist-bargraph-only) |
-| valueSuffixList       | X        | `string[]`                | `["k", "m", "b", "t"]` | List of suffix attached to `value` after dividing `value` by `valueSuffixCnt`<br>[valueSuffixList](#valuesuffixcnt--valuesuffixlist-bargraph-only) |
-| showDivider           | X        | `boolean`                 | `true`      | Whether to display a divider at certain percentages in the bar's placeholder |
+
+| prop                  | Required | Type                      | Default       | Related |
+| --------------------- | :------: | ------------------------- | ------------- | ----------- |
+| graphData             | O        | `IBarGraphData[]`         |               | [🔗 IBarGraphData](#ibargraphdata)<br>[🔗 graphData](#graphdata) |
+| totalCnt              | X        | `number`                  | sum of `graphData[0...n].value` | [🔗 totalCnt](#totalcnt) |
+| style                 | X        | `CSSProperties`           | default style | [🔗 style](#style-bargraph) |
+| className             | X        | `string`                  |               | Class name for graph containers |
+| title                 | X        | `string`                  |               | [🔗 title & titleStyle](#title--titlestyle-bargraph) |
+| titleStyle            | X        | `CSSProperties`           | default style | [🔗 title & titleStyle](#title--titlestyle-bargraph) |
+| titlePosition         | X        | `"top"`<br>`"bottom"`     | `"top"`       | Position of the title |
+| barHeight             | X        | `number`                  | `28`          | Height of each bar |
+| barHolderColor        | X        | `Property.Color`          | `"#EEEEEE"`   | Placeholder color for bars |
+| barDistance           | X        | `number`                  | `12`          | Distance between bars<br>[barDistance (BarGraph only)](#bardistance-bargraph-only) |
+| barAnimated           | X        | `boolean`                 | `true`        | Whether to animate the bar |
+| barAnimateDelay       | X        | `number`                  | `60`          | Delay time (ms) at which the animation of the bars begins |
+| barLeftStyle          | X        | `"rounded"`<br>`"square"` | `"rounded"`   | Left style of bar (both colored and holder).<br>[barLeftStyle](#barleftstyle-barrightstyle-barholderrightstyle) |
+| barRightStyle         | X        | `"rounded"`<br>`"square"` | `"rounded"`   | Right style of colored bar.<br>[barRightStyle](#barleftstyle-barrightstyle-barholderrightstyle) |
+| barHolderRightStyle   | X        | `"rounded"`<br>`"square"` | `"rounded"`   | Right style of placeholder of bar.<br>[barHolderRightStyle](#barleftstyle-barrightstyle-barholderrightstyle) |
+| showLabel             | X        | `boolean`                 | `true`        | Whether to show each label of graphData |
+| labelPosition         | X        | `"top"`<br>`"bottom"`     | `"top"`       | Position of each label relative to the bar |
+| labelStlye            | X        | `CSSProperties`           | default style | Styles for label<br>[🔗 details](#labelstlye-bargraph) |
+| showValue             | X        | `boolean`                 | `true`        | Whether to show the value above the bar |
+| valuePosition         | X        | `"left"`<br>`"right"`     | `"right"`     | Position on the bar where the value is rendered<br>[valuePosition (BarGraph only)](#valueposition-bargraph-only) |
+| valueSuffixCnt        | X        | `number`                  | `1000`        | Number to attach suffix when `value` exceeds `valueSuffixCnt`<br>[🔗 details](#valuesuffixcnt--valuesuffixlist-bargraph-only) |
+| valueSuffixList       | X        | `string[]`                | `["k", "m", "b", "t"]` | List of suffix attached to `value` after dividing `value` by `valueSuffixCnt`<br>[🔗 details](#valuesuffixcnt--valuesuffixlist-bargraph-only) |
+| showDivider           | X        | `boolean`                 | `true`        | Whether to display a divider at certain percentages in the bar's placeholder |
 | dividerInterver       | X        | `4`, `5`, `10`, `20`, `25`, `33.3`, `50` | `20` | A number for what percentage of intervals the dividing lines are rendered.<br>*e.g.* If set to `20`, dividers will be rendered at `20%`, `40%`, `60%`, and `80%`. |
-| dividerHeight         | X        | `number`                  | `60`        | Height of divider (percent).<br>When set to `100`, it is equal to the height of the bar |
-| dividerColor          | X        | `Property.Color`          | `"#BBBBBB"` | Color of divider |
-| dividerWidth          | X        | `number`                  | `1`         | Width of each divider |
+| dividerHeight         | X        | `number`                  | `60`          | Height of divider (percent).<br>When set to `100`, it is equal to the height of the bar |
+| dividerColor          | X        | `Property.Color`          | `"#BBBBBB"`   | Color of divider |
+| dividerWidth          | X        | `number`                  | `1`           | Width of each divider |
 | percentPosition       | X        | `"left"`<br>`"right"`<br>`"none"` | `"right"` | Position where the percentage corresponding to value is displayed.<br>**NOTE:** When `undefined` or `"none"`, it is not rendered. |
-| percentFixed          | X        | `0` `1` `2`               | `0`         | A number representing the decimal place of a percentage to be rendered.<br>*e.g.1* Rendered to `50%` when set to `0`<br>*e.g.2* Rendered to `50.0%` when set to `1`<br>*e.g.3* Rendered to `50.00%` when set to `2`<br>**NOTE:** this prop is ignored when `PercentLabelComponent` is passed<br>퍼센트의 소수점 몇번째 자리까지 표시할지 |
+| percentFixed          | X        | `0`, `1`, `2`             | `0`           | A number representing the decimal place of a percentage to be rendered<br>[🔗 details](#percentfixed-bargraph) |
 | PercentLabelComponent | X        | `({ value, total, color }: { value: number; total: number, color: ColorValue \| undefined }) => ReactElement \| null \| undefined` | | A React Component to display percentages.<br>[PercentLabelComponent](#percentlabelcomponent) |
-| enableTouchHighlight  | X        | `boolean` | `true` | Whether to enable color highlighting when a bar or list item is touched.<br>[enableTouchHighlight](#enabletouchhighlight) |
+| enableTouchHighlight  | X        | `boolean`                 | `true`        | Whether to enable color highlighting when a bar or list item is touched.<br>[enableTouchHighlight](#enabletouchhighlight) |
+
+<br>
+
+#### graphData
+
+Data to be rendered
+
+> **Required**: ⭕  
+> **Type**: [`IBarGraphData[]`](#ibargraphdata)
+
+[🔼 back to `BarGraph`](#bargraph)
+
+<br>
+
+#### totalCnt
+
+Total number of data.  
+Used as denominator when calculating percentages.
+
+> **Required**: ❌  
+> **Type**: `number`  
+> **Default**: sum of `graphData[0...n].value`
+
+[🔼 back to `BarGraph`](#bargraph)
+
+<br>
+
+#### style (BarGraph)
+
+Styles for graph containers
+
+> **Required**: ❌  
+> **Type**: `CSSProperties`  
+
+``` js
+// default style
+{
+  display: "flex",
+  boxSizing: "border-box",
+  flexDirection: "column",
+  flex: 1,
+  position: "relative",
+  minWidth: 320,
+}
+```
+
+[🔼 back to `BarGraph`](#bargraph)
+
+<br>
+
+#### title & titleStyle (BarGraph)
+
+Title of graph.  
+**NOTE:** If `title` is `undefined` or an empty string (`""`), it will not be rendered.
+
+``` js
+// default title style
+{
+  fontWeight: "bold",
+  fontSize: 20,
+  textAlign: "center",
+  marginVertical: 16
+}
+```
+
+[🔼 back to `BarGraph`](#bargraph)
+
+<br>
+
+#### labelStlye (BarGraph)
+
+Styles for label.
+
+``` js
+{
+  color: "#999999",
+  fontSize: barHeight / 2
+}
+```
+
+**NOTE:** By default, fontSize is set to `barHeight/2`.  
+**NOTE:** When you touch the bar, the text color is highlighted in the same color as the bar.
+If you don't want it, set `enableTouchHighlight` to `false`.
+
+[🔼 back to `BarGraph`](#bargraph)
+
+<br>
+
+#### valueSuffixCnt & valueSuffixList (BarGraph only)
+
+`valueSuffixCnt` & `valueSuffixList` are used for simplicity depending on the digits.
+
+- `valueSuffixCnt` is a Number to attach suffix when `value` exceeds `valueSuffixCnt`.
+- `valueSuffixList` is a List of suffix attached to `value` after dividing `value` by `valueSuffixCnt`
+
+Suppose the `valueSuffixCnt` is `1000`, and the `valueSuffixList` is `["k", "m", "b", "t"]`.  
+*e.g.1.* The number `1234` is expressed as `"1.2k"`. (up to the first decimal place)  
+*e.g.2.* The number `20000000` is expressed by `"20m"`.
+
+**NOTE:** `valueSuffixCnt` <= 0 means No Suffix.  
+*e.g.1.* The number `1234` is expressed as `"1,234"`.  
+*e.g.2.* The number `20000000` is expressed by `"20,000,000"`.
+
+[🔼 back to `BarGraph`](#bargraph)
+
+<br>
+
+#### percentFixed (BarGraph)
+
+A number representing the decimal place of a percentage to be rendered.
+
+*e.g.1* Rendered to `50%` when set to `0`  
+*e.g.2* Rendered to `50.0%` when set to `1`  
+*e.g.3* Rendered to `50.00%` when set to `2`
+
+**NOTE:** this prop is ignored when `PercentLabelComponent` is passed
+
+[🔼 back to `BarGraph`](#bargraph)
 
 <br>
 
@@ -209,33 +325,33 @@ only 1 required prop
 
 2 required props. Shares many items with props from `BarGraph`
 
-| prop | Required | Type | Default | Description |
-| ---- | :-------:| ---- | ------- | ----------- |
-| graphData | O | `IBarGraphData` |  | Data to be rendered<br>[details](#ibargraphdata) |
-| totalCnt | O | `number` |  | Total number of data.<br>Used as denominator when calculating percentages.<br>데이터의 전체 갯수.<br>퍼센트를 계산할 때 분모로 사용됨. |
-| style | X | `StyleProp<ViewStyle>` |  | Styles for graph containers |
-| title | X | `string` |  | Title of graph<br>**NOTE:** If title is `undefined` or an empty string (`""`), it will not be rendered. |
-| titlePosition | X | `"top" \| "bottom"` | `"top"` | Position of the title |
-| titleStyle | X | `StyleProp<TextStyle>` | `{fontWeight: "bold", fontSize: 20, textAlign: "center", marginVertical: 16}` | Styles for title |
-| barHeight | X | `number` | `28` | Height of each bar |
-| barHolderColor | X | `ColorValue` | `"#EEEEEE"` | Placeholder color for bars |
-| barAnimated | X | `boolean` | `true` | Whether to animate the bar |
-| barLeftStyle | X | `"rounded" \| "square"` | `"rounded"` | Left style of bar (both colored and holder).<br>[barLeftStyle](#barleftstyle-barrightstyle-barholderrightstyle) |
-| barRightStyle | X | `"rounded" \| "square"` | `"rounded"` | Right style of colored bar.<br>[barRightStyle](#barleftstyle-barrightstyle-barholderrightstyle) |
-| barHolderRightStyle | X | `"rounded" \| "square"` | `"rounded"` | Right style of placeholder of bar.<br>[barHolderRightStyle](#barleftstyle-barrightstyle-barholderrightstyle) |
-| showDivider | X | `boolean` | `true` | Whether to display a divider at certain percentages in the bar's placeholder |
-| dividerInterver | X | `4 \| 5 \| 10 \| 20 \| 25 \| 33.3 \| 50` | `20` | A number for what percentage of intervals the dividing lines are rendered<br>*e.g.* If set to `20`, dividers will be rendered at `20%`, `40%`, `60%`, and `80%`.<br>divider가 몇%마다 표시될지 |
-| dividerHeight | X | `string \| number` | `"60%"` | Height of divider<br>When set to "100%", it is equal to the height of the bar |
-| dividerColor | X | `ColorValue` | `"#BBBBBB"` | Color of divider |
-| dividerWidth | X | `number` | `1` | Width of each divider |
-| percentPosition | X | `"left" \| "right" \| "none"` | `"right"` | Position where the percentage corresponding to value is displayed.<br>**NOTE:** If it is `undefined` or `"none"`, it is not rendered. |
-| percentFixed | X | `0 \| 1 \| 2` | `0` | A number representing the decimal place of a percentage to be rendered.<br>*e.g.1* Rendered to `50%` when set to `0`<br>*e.g.2* Rendered to `50.0%` when set to `1`<br>*e.g.3* Rendered to `50.00%` when set to `2`<br>**NOTE:** this prop is ignored when `PercentLabelComponent` is passed<br>퍼센트의 소수점 몇번째 자리까지 표시할지 |
-| PercentLabelComponent | X | `({ value, total, color }: { value: number; total: number, color: ColorValue \| undefined }) => ReactElement \| null \| undefined` | | A React Component to display percentages.<br>[PercentLabelComponent](#percentlabelcomponent) |
-| enableTouchHighlight | X | `boolean` | `true` | Whether to enable color highlighting when a bar or list item is touched.<br>[enableTouchHighlight](#enabletouchhighlight) |
-| showList | X | `boolean` | `true` | Whether to render a list of `graphData` |
-| listAnimated | X | `boolean` | `true` | Whether to run animations when the list is displayed |
-| listContainerStyle | X | `StyleProp<ViewStyle>` |  | Style of list container |
-| ListItemComponent | X | `(props: IStackedCustomListItemProps) => ReactElement` |  | A React Component that renders custom list items.<br>[ListItemComponent (StackedBar Only)](#listitemcomponent-stackedbar-only) |
+| prop                  | Required | Type | Default | Description |
+| --------------------- | :-------:| ---- | ------- | ----------- |
+| graphData             | O        | `IBarGraphData` |  | Data to be rendered<br>[🔗 details](#ibargraphdata) |
+| totalCnt              | O        | `number` |  | Total number of data.<br>Used as denominator when calculating percentages.<br>데이터의 전체 갯수.<br>퍼센트를 계산할 때 분모로 사용됨. |
+| style                 | X        | `StyleProp<ViewStyle>` |  | Styles for graph containers |
+| title                 | X        | `string` |  | Title of graph<br>**NOTE:** If title is `undefined` or an empty string (`""`), it will not be rendered. |
+| titlePosition         | X        | `"top" \| "bottom"` | `"top"` | Position of the title |
+| titleStyle            | X        | `StyleProp<TextStyle>` | `{fontWeight: "bold", fontSize: 20, textAlign: "center", marginVertical: 16}` | Styles for title |
+| barHeight             | X        | `number` | `28` | Height of each bar |
+| barHolderColor        | X        | `ColorValue` | `"#EEEEEE"` | Placeholder color for bars |
+| barAnimated           | X        | `boolean` | `true` | Whether to animate the bar |
+| barLeftStyle          | X        | `"rounded" \| "square"` | `"rounded"` | Left style of bar (both colored and holder).<br>[barLeftStyle](#barleftstyle-barrightstyle-barholderrightstyle) |
+| barRightStyle         | X        | `"rounded" \| "square"` | `"rounded"` | Right style of colored bar.<br>[barRightStyle](#barleftstyle-barrightstyle-barholderrightstyle) |
+| barHolderRightStyle   | X        | `"rounded" \| "square"` | `"rounded"` | Right style of placeholder of bar.<br>[barHolderRightStyle](#barleftstyle-barrightstyle-barholderrightstyle) |
+| showDivider           | X        | `boolean` | `true` | Whether to display a divider at certain percentages in the bar's placeholder |
+| dividerInterver       | X        | `4 \| 5 \| 10 \| 20 \| 25 \| 33.3 \| 50` | `20` | A number for what percentage of intervals the dividing lines are rendered<br>*e.g.* If set to `20`, dividers will be rendered at `20%`, `40%`, `60%`, and `80%`.<br>divider가 몇%마다 표시될지 |
+| dividerHeight         | X        | `string \| number` | `"60%"` | Height of divider<br>When set to "100%", it is equal to the height of the bar |
+| dividerColor          | X        | `ColorValue` | `"#BBBBBB"` | Color of divider |
+| dividerWidth          | X        | `number` | `1` | Width of each divider |
+| percentPosition       | X        | `"left" \| "right" \| "none"` | `"right"` | Position where the percentage corresponding to value is displayed.<br>**NOTE:** If it is `undefined` or `"none"`, it is not rendered. |
+| percentFixed          | X        | `0 \| 1 \| 2` | `0` | A number representing the decimal place of a percentage to be rendered.<br>*e.g.1* Rendered to `50%` when set to `0`<br>*e.g.2* Rendered to `50.0%` when set to `1`<br>*e.g.3* Rendered to `50.00%` when set to `2`<br>**NOTE:** this prop is ignored when `PercentLabelComponent` is passed<br>퍼센트의 소수점 몇번째 자리까지 표시할지 |
+| PercentLabelComponent | X        | `({ value, total, color }: { value: number; total: number, color: ColorValue \| undefined }) => ReactElement \| null \| undefined` | | A React Component to display percentages.<br>[PercentLabelComponent](#percentlabelcomponent) |
+| enableTouchHighlight  | X        | `boolean` | `true` | Whether to enable color highlighting when a bar or list item is touched.<br>[enableTouchHighlight](#enabletouchhighlight) |
+| showList              | X        | `boolean` | `true` | Whether to render a list of `graphData` |
+| listAnimated          | X        | `boolean` | `true` | Whether to run animations when the list is displayed |
+| listContainerStyle    | X        | `StyleProp<ViewStyle>` |  | Style of list container |
+| ListItemComponent     | X        | `(props: IStackedCustomListItemProps) => ReactElement` |  | A React Component that renders custom list items.<br>[ListItemComponent (StackedBar Only)](#listitemcomponent-stackedbar-only) |
 
 ## Demo
 
@@ -393,20 +509,6 @@ If you don't want this effect, set `enableTouchHighlight` to `false`.
   // other props...
 />
 ```
-
-<br>
-
-### valueSuffixCnt & valueSuffixList (BarGraph only)
-
-`valueSuffixCnt` & `valueSuffixList` are used for simplicity depending on the digits.
-
-Suppose the `valueSuffixCnt` is `1000`, and the `valueSuffixList` is `["k", "m", "b", "t"]`.  
-*e.g.1.* The number `1234` is expressed as `"1.2k"`. (up to the first decimal place)  
-*e.g.2.* The number `20000000` is expressed by `"20m"`.
-
-**NOTE:** `valueSuffixCnt` <= 0 means No Suffix.  
-*e.g.1.* The number `1234` is expressed as `"1,234"`.  
-*e.g.2.* The number `20000000` is expressed by `"20,000,000"`.
 
 <br>
 
